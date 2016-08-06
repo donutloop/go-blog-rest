@@ -1,0 +1,14 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "SrReKzWaaQY83npVXzR/243c6NY=",
+			"path": "github.com/ant0ine/go-json-rest",
+			"revision": "3a807d6d8d36e0f9175d6c292030fce09bcbb2db",
+			"revisionTime": "2016-06-07T05:59:10Z",
+			"tree": true
+		}
+	],
+	"rootPath": "github.com/donutloop/go-blog-rest"
+}
