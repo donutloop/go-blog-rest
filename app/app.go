@@ -9,12 +9,18 @@ import (
 	"github.com/donutloop/go-blog-rest/middelware"
 )
 
-const PORT = ":8081"
+const SERVER_HOSTNAME = "127.0.0.1"
+const SERVER_PORT = ":8081"
+const DATABASE_PORT = "28015"
+const DATABASE_HOSTNAME = "127.0.0.1"
 
 type App struct{
 	debugMode *bool
 	api *rest.Api
-	port *string
+	serverHostname *string
+	serverPort *string
+	databasePort *string
+	databaseHostname *string
 }
 
 func NewApp() *App{
@@ -43,23 +49,23 @@ func (self *App) Init() {
 
 func (self *App) parseCommandsFlags() {
 	self.debugMode = flag.Bool("debugMode", false, "Activae debug mode")
-	self.port =  flag.String("port", PORT, "Server port of Applicaition")
+	self.serverHostname = flag.String("server-hostname", SERVER_HOSTNAME, "Hostname of Application")
+	self.serverPort =  flag.String("server-port", SERVER_PORT, "Server port of Application")
+	self.databasePort = flag.String("database-port", DATABASE_PORT, "Port of Database")
+	self.databaseHostname = flag.String("database-hostname", DATABASE_HOSTNAME, "Hostname of Database")
 	flag.Parse()
 }
 
 func (self *App) useStack() {
-
-
 	if *self.debugMode {
 		self.api.Use(rest.DefaultDevStack...)
 	} else {
 		self.api.Use(rest.DefaultProdStack...)
 	}
 
-	self.api.Use(middelware.NewRethinkDatabaseSessionMiddleware())
-
+	self.api.Use(middelware.NewRethinkDatabaseSessionMiddleware(*self.databaseHostname, *self.databasePort))
 }
 
 func (self *App) Run() {
-	log.Fatal(http.ListenAndServe(*self.port, self.api.MakeHandler()))
+	log.Fatal(http.ListenAndServe(*self.serverPort, self.api.MakeHandler()))
 }

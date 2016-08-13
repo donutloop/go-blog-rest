@@ -8,17 +8,21 @@ import (
 )
 
 type RethinkDatabaseSessionMiddleware struct {
+	port string
+	hostname string
 }
 
-func NewRethinkDatabaseSessionMiddleware () *RethinkDatabaseSessionMiddleware {
-	return &RethinkDatabaseSessionMiddleware{}
+func NewRethinkDatabaseSessionMiddleware (hostname string, port string) *RethinkDatabaseSessionMiddleware {
+	return &RethinkDatabaseSessionMiddleware{
+		hostname: hostname,
+		port: port}
 }
 
 // MiddlewareFunc returns a HandlerFunc that implements the middleware.
-func (mw *RethinkDatabaseSessionMiddleware) MiddlewareFunc(h rest.HandlerFunc) rest.HandlerFunc {
+func (self *RethinkDatabaseSessionMiddleware) MiddlewareFunc(h rest.HandlerFunc) rest.HandlerFunc {
 	return func(w rest.ResponseWriter, r *rest.Request) {
 
-		session := initDatabaseSession()
+		session := self.initDatabaseSession()
 
 		context.Set(r, "dbSession", session)
 
@@ -31,9 +35,9 @@ func (mw *RethinkDatabaseSessionMiddleware) MiddlewareFunc(h rest.HandlerFunc) r
 	}
 }
 
-func initDatabaseSession() *gorethink.Session {
+func (self *RethinkDatabaseSessionMiddleware) initDatabaseSession() *gorethink.Session {
 	session, err := gorethink.Connect(gorethink.ConnectOpts{
-		Address: "127.0.1.1",
+		Address: self.hostname + ":" + self.port,
 	})
 
 	if err != nil {
