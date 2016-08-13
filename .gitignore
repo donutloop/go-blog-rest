@@ -8,7 +8,7 @@
 # Folders
 _obj
 _test
-vendor/github.com
+vendor
 
 # Architecture specific extensions/prefixes
 *.[568vq]
