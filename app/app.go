@@ -6,9 +6,10 @@ import (
 	"github.com/donutloop/go-blog-rest/controller"
 	"log"
 	"net/http"
+	"github.com/donutloop/go-blog-rest/middelware"
 )
 
-const PORT = ":8080"
+const PORT = ":8081"
 
 type App struct{
 	debugMode *bool
@@ -47,11 +48,16 @@ func (self *App) parseCommandsFlags() {
 }
 
 func (self *App) useStack() {
-	if *self.debugMode{
+
+
+	if *self.debugMode {
 		self.api.Use(rest.DefaultDevStack...)
-	}else{
+	} else {
 		self.api.Use(rest.DefaultProdStack...)
 	}
+
+	self.api.Use(middelware.NewRethinkDatabaseSessionMiddleware())
+
 }
 
 func (self *App) Run() {
