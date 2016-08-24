@@ -23,10 +23,10 @@ func (self *RethinkDatabaseSessionMiddleware) MiddlewareFunc(h rest.HandlerFunc)
 	return func(w rest.ResponseWriter, r *rest.Request) {
 
 		session := self.initDatabaseSession()
-
 		context.Set(r, "dbSession", session)
 
 		defer func() {
+
 			session.Close()
 			context.Delete(r, "dbSession")
 		}()
