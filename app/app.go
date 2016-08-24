@@ -17,7 +17,7 @@ type App struct{
 	api *rest.Api
 }
 
-func NewApp() *App{
+func New() *App {
    return &App{}
 }
 
@@ -42,7 +42,7 @@ func (self *App) Init() {
 	self.api.SetApp(router)
 }
 
-func (self *App) loadConfiguration(){
+func (self *App) loadConfiguration() {
 
 	var config config.Configuration
 
@@ -65,6 +65,5 @@ func (self *App) useStack() {
 }
 
 func (self *App) Run() {
-
 	log.Fatal(http.ListenAndServe(self.config.Server.Port, self.api.MakeHandler()))
 }
