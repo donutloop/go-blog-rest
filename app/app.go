@@ -6,11 +6,10 @@ import (
 	"log"
 	"net/http"
 	"github.com/donutloop/go-blog-rest/middelware"
-	"github.com/BurntSushi/toml"
 	"github.com/donutloop/go-blog-rest/config"
 )
 
-const CONFIGURATION_FILE string = "./config/config.toml"
+
 
 type App struct{
 	config config.Configuration
@@ -23,7 +22,11 @@ func New() *App {
 
 func (self *App) Init() {
 
-	self.loadConfiguration()
+	commands := newCommandChain()
+	data := commands.Execute()
+	commands.Clear()
+
+	self.config = data["config"].(config.Configuration)
 
 	self.api = rest.NewApi()
 
@@ -42,17 +45,6 @@ func (self *App) Init() {
 	self.api.SetApp(router)
 }
 
-func (self *App) loadConfiguration() {
-
-	var config config.Configuration
-
-	if _, err := toml.DecodeFile(CONFIGURATION_FILE, &config); err != nil {
-		log.Fatal(err)
-		return
-	}
-
-	self.config = config
-}
 
 func (self *App) useStack() {
 	if self.config.DebugMode {
