@@ -12,6 +12,7 @@ var (
 	datat = make(map[*rest.Request]int64)
 )
 
+
 // Set stores a value for a given key in a given request.
 func Set(r *rest.Request, key, val interface{}) {
 	mutex.Lock()

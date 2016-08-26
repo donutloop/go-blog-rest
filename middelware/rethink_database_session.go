@@ -4,7 +4,7 @@ package middelware
 import (
 	"github.com/ant0ine/go-json-rest/rest"
 	"github.com/dancannon/gorethink"
-	"github.com/donutloop/go-blog-rest/library"
+	"github.com/donutloop/go-blog-rest/utils/context"
 )
 
 type RethinkDatabaseSessionMiddleware struct {

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"github.com/donutloop/go-blog-rest/middelware"
 	"github.com/donutloop/go-blog-rest/config"
+	"github.com/donutloop/go-blog-rest/utils/clog"
 )
 
 
@@ -52,6 +53,8 @@ func (self *App) useStack() {
 	} else {
 		self.api.Use(rest.DefaultProdStack...)
 	}
+
+	clog.New().Info(map[string]interface{}{"Message":"Connect to Database on","Hostname": self.config.Database.Hostname, "Database port": self.config.Database.Hostname})
 
 	self.api.Use(middelware.NewRethinkDatabaseSessionMiddleware(self.config.Database.Hostname, self.config.Database.Port))
 }
