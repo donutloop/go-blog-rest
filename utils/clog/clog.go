@@ -11,22 +11,22 @@ func New() *cLogger {
 	return &cLogger{}
 }
 
-func (self *cLogger) Warning(v map[string]interface{}) {
+func (self cLogger) Warning(v map[string]interface{}) {
 	message := self.formatLog("Warning",v)
 	log.Print(message)
 }
 
-func (self *cLogger) Info(v map[string]interface{}) {
+func (self cLogger) Info(v map[string]interface{}) {
 	message := self.formatLog("Info", v)
 	log.Print(message)
 }
 
-func (self *cLogger) Fatal(v map[string]interface{}) {
+func (self cLogger) Fatal(v map[string]interface{}) {
 	message := self.formatLog("Fatal error", v)
 	log.Print(message)
 }
 
-func (self *cLogger) Debug(v map[string]interface{}) {
+func (self cLogger) Debug(v map[string]interface{}) {
 	message := self.formatLog("Debug", v)
 	log.Fatal(message)
 }

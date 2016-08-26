@@ -10,8 +10,6 @@ import (
 	"github.com/donutloop/go-blog-rest/utils/clog"
 )
 
-
-
 type App struct{
 	config config.Configuration
 	api *rest.Api
@@ -45,7 +43,6 @@ func (self *App) Init() {
 
 	self.api.SetApp(router)
 }
-
 
 func (self *App) useStack() {
 	if self.config.DebugMode {
