@@ -51,11 +51,12 @@ func (self *App) useStack() {
 		self.api.Use(rest.DefaultProdStack...)
 	}
 
-	clog.New().Info(map[string]interface{}{"Message":"Connect to Database on","Hostname": self.config.Database.Hostname, "Database port": self.config.Database.Hostname})
+	clog.GetInstance().Info(map[string]interface{}{"Message":"Connect to Database on","Hostname": self.config.Database.Hostname, "Database port": self.config.Database.Port})
 
 	self.api.Use(middelware.NewRethinkDatabaseSessionMiddleware(self.config.Database.Hostname, self.config.Database.Port))
 }
 
 func (self *App) Run() {
+	clog.GetInstance().Info(map[string]interface{}{"Message":"Server run on","Hostname": self.config.Server.Hostname, "Database port": self.config.Database.Port})
 	log.Fatal(http.ListenAndServe(self.config.Server.Port, self.api.MakeHandler()))
 }

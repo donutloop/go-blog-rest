@@ -10,8 +10,13 @@ type command interface {
 	Execute() interface{}
 }
 
-func newCommandChain() *MacroCommand{
-	return &MacroCommand{commands:map[string]command{"config":LoadConfigurationCommand{}}}
+func newCommandChain() *MacroCommand {
+
+	commands := map[string]command{
+		"config":LoadConfigurationCommand{},
+	}
+
+	return &MacroCommand{commands:commands}
 }
 
 type MacroCommand struct {

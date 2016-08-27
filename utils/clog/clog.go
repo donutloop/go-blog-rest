@@ -3,12 +3,26 @@ package clog
 import (
 	"log"
 	"fmt"
+	"sync"
 )
 
 type cLogger struct {}
 
 func New() *cLogger {
 	return &cLogger{}
+}
+
+var instance *cLogger
+var once sync.Once
+
+// Singleton pattern
+func GetInstance() *cLogger {
+
+	once.Do(func() {
+		instance = &cLogger{}
+	})
+
+	return instance
 }
 
 func (self cLogger) Warning(v map[string]interface{}) {
