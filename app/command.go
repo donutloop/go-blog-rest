@@ -10,15 +10,6 @@ type command interface {
 	Execute() interface{}
 }
 
-func newCommandChain() *MacroCommand {
-
-	commands := map[string]command{
-		"config":LoadConfigurationCommand{},
-	}
-
-	return &MacroCommand{commands:commands}
-}
-
 type MacroCommand struct {
 	commands map[string]command
 }
@@ -29,6 +20,8 @@ func (self *MacroCommand) Execute() map[string]interface{} {
 	for index, command := range self.commands {
 		result[index] = command.Execute()
 	}
+
+	self.Clear()
 
 	return result
 }
@@ -41,15 +34,15 @@ func (self *MacroCommand) Clear() {
 	self.commands = map[string]command{}
 }
 
-const CONFIGURATION_FILE string = "./config/config.toml"
-
-type LoadConfigurationCommand struct{}
+type LoadConfigurationCommand struct{
+	ConfigFile string
+}
 
 func (self LoadConfigurationCommand) Execute() interface{} {
 
 	var config config.Configuration
 
-	if _, err := toml.DecodeFile(CONFIGURATION_FILE, &config); err != nil {
+	if _, err := toml.DecodeFile(self.ConfigFile, &config); err != nil {
 		log.Fatal(err)
 	}
 

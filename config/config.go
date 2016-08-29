@@ -8,10 +8,10 @@ type Configuration struct {
 
 type database struct {
 	Hostname  string
-	Port   string
+	Port   int
 }
 
 type server struct {
 	Hostname string
-	Port string
+	Port int
 }

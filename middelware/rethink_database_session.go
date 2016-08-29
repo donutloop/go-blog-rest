@@ -5,14 +5,15 @@ import (
 	"github.com/ant0ine/go-json-rest/rest"
 	"github.com/dancannon/gorethink"
 	"github.com/donutloop/go-blog-rest/utils/context"
+	"strconv"
 )
 
 type RethinkDatabaseSessionMiddleware struct {
-	port string
+	port int
 	hostname string
 }
 
-func NewRethinkDatabaseSessionMiddleware (hostname string, port string) *RethinkDatabaseSessionMiddleware {
+func NewRethinkDatabaseSessionMiddleware (hostname string, port int) *RethinkDatabaseSessionMiddleware {
 	return &RethinkDatabaseSessionMiddleware{
 		hostname: hostname,
 		port: port}
@@ -37,7 +38,7 @@ func (self *RethinkDatabaseSessionMiddleware) MiddlewareFunc(h rest.HandlerFunc)
 
 func (self *RethinkDatabaseSessionMiddleware) initDatabaseSession() *gorethink.Session {
 	session, err := gorethink.Connect(gorethink.ConnectOpts{
-		Address: self.hostname + ":" + self.port,
+		Address: self.hostname + ":" + strconv.Itoa(self.port),
 	})
 
 	if err != nil {

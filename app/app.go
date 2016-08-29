@@ -8,7 +8,10 @@ import (
 	"github.com/donutloop/go-blog-rest/middelware"
 	"github.com/donutloop/go-blog-rest/config"
 	"github.com/donutloop/go-blog-rest/utils/clog"
+	"strconv"
 )
+
+const CONFIGURATION_FILE string = "./config/config.toml"
 
 type App struct{
 	config config.Configuration
@@ -21,9 +24,9 @@ func New() *App {
 
 func (self *App) Init() {
 
-	commands := newCommandChain()
+	commands := self.newCommandChain()
+
 	data := commands.Execute()
-	commands.Clear()
 
 	self.config = data["config"].(config.Configuration)
 
@@ -44,6 +47,15 @@ func (self *App) Init() {
 	self.api.SetApp(router)
 }
 
+func (self App) newCommandChain() *MacroCommand {
+
+	commands := map[string]command{
+		"config":LoadConfigurationCommand{ConfigFile:CONFIGURATION_FILE},
+	}
+
+	return &MacroCommand{commands:commands}
+}
+
 func (self *App) useStack() {
 	if self.config.DebugMode {
 		self.api.Use(rest.DefaultDevStack...)
@@ -51,12 +63,12 @@ func (self *App) useStack() {
 		self.api.Use(rest.DefaultProdStack...)
 	}
 
-	clog.GetInstance().Info(map[string]interface{}{"Message":"Connect to Database on","Hostname": self.config.Database.Hostname, "Database port": self.config.Database.Port})
+	clog.GetInstance().Info(map[string]interface{}{"Message":"Connect to Database on","Hostname": self.config.Database.Hostname, "Database port": strconv.Itoa(self.config.Database.Port)})
 
 	self.api.Use(middelware.NewRethinkDatabaseSessionMiddleware(self.config.Database.Hostname, self.config.Database.Port))
 }
 
 func (self *App) Run() {
-	clog.GetInstance().Info(map[string]interface{}{"Message":"Server run on","Hostname": self.config.Server.Hostname, "Database port": self.config.Database.Port})
-	log.Fatal(http.ListenAndServe(self.config.Server.Port, self.api.MakeHandler()))
+	clog.GetInstance().Info(map[string]interface{}{"Message":"Server run on","Hostname": self.config.Server.Hostname, "Database port": strconv.Itoa(self.config.Database.Port)})
+	log.Fatal(http.ListenAndServe(":" + strconv.Itoa(self.config.Server.Port), self.api.MakeHandler()))
 }
