@@ -24,9 +24,13 @@ func New() *App {
 
 func (self *App) Init() {
 
-	commands := self.newCommandChain()
+	commands := newCommandChain()
 
-	data := commands.Execute()
+	data, err := commands.Execute()
+
+	if err != nil {
+		clog.GetInstance().Fatal(map[string]interface{}{"Message": err})
+	}
 
 	self.config = data["config"].(config.Configuration)
 
@@ -45,15 +49,6 @@ func (self *App) Init() {
 	}
 
 	self.api.SetApp(router)
-}
-
-func (self App) newCommandChain() *MacroCommand {
-
-	commands := map[string]command{
-		"config":LoadConfigurationCommand{ConfigFile:CONFIGURATION_FILE},
-	}
-
-	return &MacroCommand{commands:commands}
 }
 
 func (self *App) useStack() {

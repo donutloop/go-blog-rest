@@ -4,34 +4,16 @@ import (
 	"github.com/donutloop/go-blog-rest/config"
 	"github.com/BurntSushi/toml"
 	"log"
+	"github.com/donutloop/go-blog-rest/utils/command"
 )
 
-type command interface {
-	Execute() interface{}
-}
+func newCommandChain() *command.MacroCommand {
 
-type MacroCommand struct {
-	commands map[string]command
-}
-
-func (self *MacroCommand) Execute() map[string]interface{} {
-	result := make(map[string]interface{})
-
-	for index, command := range self.commands {
-		result[index] = command.Execute()
+	commands := []command.CommandWrapper{
+		command.CommandWrapper{Name:"config",Command:LoadConfigurationCommand{ConfigFile:CONFIGURATION_FILE}},
 	}
 
-	self.Clear()
-
-	return result
-}
-
-func (self *MacroCommand) Append(index string, command command) {
-	self.commands[index] = command
-}
-
-func (self *MacroCommand) Clear() {
-	self.commands = map[string]command{}
+	return &command.MacroCommand{CommandWrappers:commands}
 }
 
 type LoadConfigurationCommand struct{
