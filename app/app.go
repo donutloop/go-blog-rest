@@ -64,6 +64,6 @@ func (self *App) useStack() {
 }
 
 func (self *App) Run() {
-	clog.GetInstance().Info(map[string]interface{}{"Message":"Server run on","Hostname": self.config.Server.Hostname, "Database port": strconv.Itoa(self.config.Database.Port)})
+	clog.GetInstance().Info(map[string]interface{}{"Message":"Server run on","Hostname": self.config.Server.Hostname, "Host port": strconv.Itoa(self.config.Database.Port)})
 	log.Fatal(http.ListenAndServe(":" + strconv.Itoa(self.config.Server.Port), self.api.MakeHandler()))
 }
