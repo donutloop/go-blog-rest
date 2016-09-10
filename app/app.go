@@ -34,6 +34,8 @@ func (self *App) Init() {
 
 	if config, ok := data["config"].(config.Configuration); ok {
 		self.config = config
+	}else{
+		log.Fatal("Configuration missing")
 	}
 
 	self.api = rest.NewApi()
