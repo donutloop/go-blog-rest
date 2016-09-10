@@ -32,7 +32,9 @@ func (self *App) Init() {
 		clog.GetInstance().Fatal(map[string]interface{}{"Message": err})
 	}
 
-	self.config = data["config"].(config.Configuration)
+	if config, ok := data["config"].(config.Configuration); ok {
+		self.config = config
+	}
 
 	self.api = rest.NewApi()
 
